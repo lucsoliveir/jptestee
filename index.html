@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitConsult Admin Dashboard</title>
+    <style>
+        :root{
+            --bg: #08080a;
+            --bg-alt: #0d0e11;
+            --ink: #f2f1ec;
+            --ink-dim: #9a978f;
+            --ink-faint: #58564f;
+            --line: rgba(242,241,236,0.09);
+            --line-strong: rgba(242,241,236,0.16);
+            --glass: rgba(242,241,236,0.035);
+            --glass-strong: rgba(242,241,236,0.06);
+            --accent: #c79a5b;
+            --accent-dim: rgba(199,154,91,0.35);
+            --radius-lg: 28px;
+            --radius-md: 18px;
+            --radius-sm: 10px;
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{
+            background: var(--bg);
+            color: var(--ink);
+            font-family:'Inter', sans-serif;
+            font-size:16px;
+            line-height:1.6;
+            -webkit-font-smoothing:antialiased;
+            overflow-x:hidden;
+            height:100vh;
+            display:flex;
+        }
+
+        /* Sidebar */
+        .sidebar{
+            position:fixed;
+            left:0;top:0;bottom:0;
+            width:280px;
+            background:var(--bg-alt);
+            border-right:1px solid var(--line);
+            z-index:100;
+            display:flex;
+            flex-direction:column;
+            overflow-y:auto;
+        }
+
+        .sidebar-header{
+            padding:25px 20px;
+            border-bottom:1px solid var(--line);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .sidebar-logo{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .sidebar-logo h2{
+            font-family:'Space Grotesk',sans-serif;
+            font-size:1.5rem;
+            background:linear-gradient(to right,var(--accent),#d4af37);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        .sidebar-toggle{
+            background:none;
+            border:none;
+            color:var(--ink-dim);
+            font-size:1.2rem;
+            cursor:pointer;
+            width:36px;height:36px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:var-radius-md);
+            transition:all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover{
+            background:var(--glass);
+            color:var(--ink);
+        }
+
+        .sidebar-nav{
+            flex:1;
+            overflow-y:auto;
+        }
+
+        .sidebar-nav ul{
+            list-style:none;
+        }
+
+        .sidebar-nav li{
+            margin:0;
+        }
+
+        .sidebar-nav .nav-link{
+            display:flex;
+            align-items:center;
+            padding:15px 20px;
+            color:var(--ink-dim);
+            text-decoration:none;
+            font-weight:500;
+            transition:all 0.3s ease;
+            border-radius:var(--radius-md);
+            margin:5px 12px;
+        }
+
+        .sidebar-nav .nav-link i{
+            margin-right:12px;
+            width:20px;
+            text-align:center;
+            font-size:1.1rem;
+        }
+
+        .sidebar-nav .nav-link:hover,
+        .sidebar-nav .nav-link.active{
+            background:var(--glass);
+            color:var(--ink);
+        }
+
+        .sidebar-nav .nav-link.active{
+            border-left:3px solid var(--accent);
+            box-shadow:var(--shadow-md);
+        }
+
+        .sidebar-footer{
+            padding:20px;
+            border-top:1px solid var(--line);
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .admin-avatar{
+            width:44px;height:44px;
+            border-radius:50%;
+            object-fit:cover;
+            border:2px solid var(--accent);
+        }
+
+        .admin-info h3{
+            color:var(--ink);
+            font-weight:600;
+            margin-bottom:4px;
+        }
+
+        .admin-info p{
+            color:var(--ink-dim);
+            font-size:0.85rem;
+        }
+
+        /* Main Content */
+        .main-content{
+            flex:1;
+            margin-left:280px;
+            display:flex;
+            flex-direction:column;
+            overflow-y:auto;
+        }
+
+        .main-header{
+            position:relative;
+            height:72px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 30px;
+            background:var(--bg-alt);
+            border-bottom:1px solid var(--line);
+            z-index:50;
+        }
+
+        .header-left{
+            display:flex;
+            align-items:center;
+            gap:20px;
+        }
+
+        .sidebar-toggle-mobile{
+            background:none;
+            border:none;
+            color:var(--ink-dim);
+            font-size:1.5rem;
+            cursor:pointer;
+            display:none;
+        }
+
+        .header-left h1{
+            font-family:'Space Grotesk',sans-serif;
+            font-size:1.5rem;
+            font-weight:600;
+        }
+
+        .header-right{
+            display:flex;
+            align-items:center;
+            gap:25px;
+        }
+
+        .search-box{
+            position:relative;
+            width:280px;
+        }
+
+        .search-box input{
+            width:100%;
+            padding:12px 15px;
+            padding-left:40px;
+            background:var(--glass);
+            border:1px solid var(--line);
+            border-radius:var(--radius-md);
+            color:var(--ink);
+            font-size:1rem;
+            transition:all 0.3s ease;
+        }
+
+        .search-box input:focus{
+            outline:none;
+            border-color:var(--accent);
+            background:var(--glass-strong);
+            box-shadow:0 0 0 3px rgba(199,154,91,0.2);
+        }
+
+        .search-box input::placeholder{
+            color:var(--ink-dim);
+        }
+
+        .search-box i{
+            position:absolute;
+            left:15px;
+            top:50%;
+            transform:translateY(-50%);
+            color:var(--ink-dim);
+            font-size:1.1rem;
+        }
+
+        .notifications{
+            position:relative;
+            cursor:pointer;
+        }
+
+        .notification-icon{
+            font-size:1.8rem;
+            color:var(--ink-dim);
+            transition:all 0.3s ease;
+        }
+
+        .notification-icon:hover{
+            color:var(--ink);
+            transform:scale(1.1);
+        }
+
+        .notification-badge{
+            position:absolute;
+            top:-8px;
+            right:-8px;
+            background:var(--accent);
+            color:#0a0906;
+            font-size:0.75rem;
+            font-weight:bold;
+            padding:2px 8px;
+            border-radius:10px;
+            min-width:20px;
+            text-align:center;
+        }
+
+        .user-profile{
+            display:flex;
+            align-items:center;
+            cursor:pointer;
+            gap:10px;
+            transition:all 0.3s ease;
+        }
+
+        .user-profile:hover{
+            background:var(--glass);
+            border-radius:var(--radius-md);
+            padding:5px;
+        }
+
+        .user-avatar{
+            width:48px;height:48px;
+            border-radius:50%;
+            object-fit:cover;
+            border:2px solid var(--accent);
+        }
+
+        .user-info{
+            display:flex;
+            flex-direction:column;
+        }
+
+        .user-name{
+            font-weight:600;
+            font-size:1rem;
+        }
+
+        .user-info i{
+            font-size:0.8rem;
+            color:var(--ink-dim);
+        }
+
+        /* Dashboard Content */
+        .dashboard-content{
+            flex:1;
+            overflow-y:auto;
+            padding:30px;
+        }
+
+        .alerts-section{
+            margin-bottom:30px;
+        }
+
+        .alerts-section h2{
+            font-family:'Space Grotesk',sans-serif;
+            font-size:1.5rem;
+            margin-bottom:20px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .alerts-container{
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+        }
+
+        .alert-item{
+            background:var(--glass);
+            border:1px solid var(--line);
+            border-left:4px solid var(--accent-dim);
+            border-radius:0 var(--radius-md) var(--radius-md) 0;
+            padding:18px;
+            display:flex;
+            align-items:center;
+            gap:15px;
+            transition:all 0.3s ease;
+        }
+
+        .alert-item:hover{
+            background:var(--glass-strong);
+            transform:translateX(4px);
+        }
+
+        .alert-icon{
+            font-size:1.5rem;
+            color:var(--accent-dim);
+        }
+
+        .alert-content{
+            flex:1;
+        }
+
+        .alert-content h4{
+            margin-bottom:5px;
+            font-weight:600;
+        }
+
+        .alert-content p{
+            color:var(--ink-dim);
+            font-size:0.9rem;
+            margin:0;
+        }
+
+        .alert-time{
+            color:var(--ink-dim);
+            font-size:0.8rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:25px;
+            margin-bottom:35px;
+        }
+
+        .stat-card{
+            background:var(--glass);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            padding:25px;
+            transition:all 0.3s ease;
+            cursor:pointer;
+        }
+
+        .stat-card:hover{
+            transform:translateY(-4px);
+            box-shadow:var(--shadow-lg);
+            border-color:var(--line-strong);
+        }
+
+        .stat-icon{
+            width:50px;height:50px;
+            background:var(--glass-strong);
+            border-radius:var(--radius-md);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin-bottom:20px;
+        }
+
+        .stat-icon i{
+            font-size:1.5rem;
+            color:var(--accent);
+        }
+
+        .stat-info h3{
+            font-size:1.1rem;
+            margin-bottom:10px;
+            color:var(--ink-dim);
+        }
+
+        .stat-value{
+            font-size:2.2rem;
+            font-weight:700;
+            margin-bottom:5px;
+            line-height:1;
+        }
+
+        .stat-value.currency{
+            font-size:1.8rem;
+        }
+
+        .stat-label{
+            font-size:0.9rem;
+            color:var(--ink-dim);
+        }
+
+        /* Schedule Section */
+        .schedule-section{
+            margin-bottom:35px;
+        }
+
+        .schedule-section h2{
+            font-family:'Space Grotesk',sans-serif;
+            font-size:1.5rem;
+            margin-bottom:20px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .schedule-container{
+            background:var(--glass);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            padding:25px;
+        }
+
+        .schedule-item{
+            display:flex;
+            align-items:flex-start;
+            padding:15px 0;
+            border-bottom:1px solid rgba(242,241,236,0.05);
+        }
+
+        .schedule-item:last-child{
+            border-bottom:none;
+        }
+
+        .schedule-time{
+            min-width:80px;
+            padding-right:20px;
+            border-right:1px solid rgba(242,241,236,0.1);
+        }
+
+        .schedule-time h4{
+            font-size:1.3rem;
+            margin-bottom:5px;
+            color:var(--accent);
+        }
+
+        .schedule-time p{
+            font-size:0.9rem;
+            color:var(--ink-dim);
+        }
+
+        .schedule-details{
+            flex:1;
+            padding-left:20px;
+        }
+
+        .schedule-details h4{
+            margin-bottom:8px;
+            font-size:1.2rem;
+        }
+
+        .schedule-details p{
+            color:var(--ink-dim);
+            font-size:0.95rem;
+            margin:0;
+        }
+
+        /* Charts Grid */
+        .charts-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+            gap:25px;
+        }
+
+        .chart-card{
+            background:var(--glass);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            padding:25px;
+            transition:all 0.3s ease;
+        }
+
+        .chart-card:hover{
+            transform:translateY(-3px);
+            box-shadow:var(--shadow-md);
+        }
+
+        .chart-card h3{
+            margin-bottom:20px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-size:1.2rem;
+        }
+
+        .chart-placeholder{
+            height:180px;
+            background:linear-gradient(135deg,rgba(199,154,91,0.05) 0%,rgba(170,124,66,0.05) 100%);
+            border-radius:var(--radius-md);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:var(--ink-dim);
+            font-style:italic;
+            border:1px dashed rgba(242,241,236,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width:1024px){
+            .sidebar{
+                width:80px;
+            }
+
+            .sidebar .sidebar-logo h2,
+            .sidebar .sidebar-logo p,
+            .sidebar-nav .nav-link span,
+            .sidebar-footer .admin-info{
+                display:none;
+            }
+
+            .sidebar-logo{
+                justify-content:center;
+            }
+
+            .main-content{
+                margin-left:80px;
+            }
+
+            .sidebar-toggle{
+                display:none;
+            }
+
+            .sidebar-toggle-mobile{
+                display:block;
+            }
+
+            .stats-grid{
+                grid-template-columns:repeat(2,1fr);
+            }
+        }
+
+        @media (max-width:768px){
+            .sidebar{
+                width:0;
+                visibility:hidden;
+            }
+
+            .main-content{
+                margin-left:0;
+                width:100%;
+            }
+
+            .header-left h1{
+                display:none;
+            }
+
+            .search-box{
+                width:100%;
+                max-width:none;
+            }
+
+            .stats-grid{
+                grid-template-columns:1fr;
+            }
+
+            .charts-grid{
+                grid-template-columns:1fr;
+            }
+
+            .dashboard-content{
+                padding:15px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(20px);}
+            to{opacity:1;transform:translateY(0);}
+        }
+
+        .alert-item,
+        .schedule-item,
+        .stat-card,
+        .chart-card{
+            animation:fadeIn 0.5s ease-out forwards;
+        }
+
+        .alert-item:nth-child(1){animation-delay:0.1s;}
+        .alert-item:nth-child(2){animation-delay:0.2s;}
+        .alert-item:nth-child(3){animation-delay:0.3s;}
+
+        .stat-card:nth-child(1){animation-delay:0.1s;}
+        .stat-card:nth-child(2){animation-delay:0.2s;}
+        .stat-card:nth-child(3){animation-delay:0.3s;}
+        .stat-card:nth-child(4){animation-delay:0.4s;}
+        .stat-card:nth-child(5){animation-delay:0.5s;}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <h2>FitConsult</h2>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="nav-item active">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Alunos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Agenda</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-dumbbell"></i>
+                        <span>Treinos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Avaliações</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Evolução</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Financeiro</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <img src="https://via.placeholder.com/44" alt="Admin" class="admin-avatar">
+                <div class="admin-info">
+                    <h3>Administrador</h3>
+                    <p>Último acesso: hoje</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="sidebar-toggle-mobile" id="sidebarToggleMobile">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Dashboard</h1>
+            </div>
+
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar alunos, treinos, etc...">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div class="notifications">
+                    <i class="fas fa-bell notification-icon"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/48" alt="User" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">Administrador</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+            <!-- Alerts Section -->
+            <div class="alerts-section">
+                <h2>⚠️ Alertas Importantes</h2>
+                <div class="alerts-container" id="alertsContainer">
+                    <!-- Alerts will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Alunos Ativos</h3>
+                        <p class="stat-value" id="activeStudents">24</p>
+                        <p class="stat-label">Total de alunos atualmente ativos</p>
+                    </>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Novos Alunos</h3>
+                        <p class="stat-value" id="newStudents">5</p>
+                        <p class="stat-label">Este mês</p>
+                    </>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Agendamentos Hoje</h3>
+                        <p class="stat-value" id="todayAppointments">8</p>
+                        <p class="stat-label">Atendimentos marcados</p>
+                    </>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Pagamentos Pendentes</h3>
+                        <p class="stat-value" id="pendingPayments">R$ 1.250,00</p>
+                        <p class="stat-label">Valor total pendente</p>
+                    </>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Avaliações Atrasadas</h3>
+                        <p class="stat-value" id="overdueAssessments">3</p>
+                        <p class="stat-label">Precisam de nova avaliação</p>
+                    </>
+                </div>
+            </div>
+
+            <!-- Today's Schedule -->
+            <div class="schedule-section">
+                <h2>📅 Agenda do Dia</h2>
+                <div class="schedule-container" id="scheduleContainer">
+                    <!-- Schedule items will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>📈 Crescimento de Alunos</h3>
+                    <div class="chart-placeholder" id="growthChart">
+                        Gráfico de crescimento mensal
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>💰 Receita Mensal</h3>
+                    <div class="chart-placeholder" id="revenueChart">
+                        Gráfico de receita
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>🎯 Avaliações por Tipo</h3>
+                    <div class="chart-placeholder" id="assessmentsChart">
+                        Distribuição de avaliações
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>📊 Status dos Alunos</h3>
+                    <div class="chart-placeholder" id="statusChart">
+                        Distribuição por status
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>

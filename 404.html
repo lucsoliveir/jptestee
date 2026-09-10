@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Não Encontrada - FitConsult Admin</title>
+    <style>
+        :root{
+            --bg: #08080a;
+            --bg-alt: #0d0e11;
+            --ink: #f2f1ec;
+            --ink-dim: #9a978f;
+            --ink-faint: #58564f;
+            --line: rgba(242,241,236,0.09);
+            --line-strong: rgba(242,241,236,0.16);
+            --glass: rgba(242,241,236,0.035);
+            --glass-strong: rgba(242,241,236,0.06);
+            --accent: #c79a5b;
+            --accent-dim: rgba(199,154,91,0.35);
+            --radius-lg: 28px;
+            --radius-md: 18px;
+            --radius-sm: 10px;
+        }
+
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{
+            background: var(--bg);
+            color: var(--ink);
+            font-family:'Inter', sans-serif;
+            font-size:16px;
+            line-height:1.6;
+            -webkit-font-smoothing:antialiased;
+            overflow-x:hidden;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+        }
+
+        .container{
+            background: var(--glass);
+            backdrop-filter: blur(10px) saturate(140%);
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .logo{
+            margin-bottom: 30px;
+        }
+
+        .logo h1{
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--accent), #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .logo p{
+            color: var(--ink-dim);
+            font-size: 1.2rem;
+        }
+
+        .message{
+            margin: 30px 0;
+            line-height: 1.6;
+        }
+
+        .message h2{
+            color: var(--ink);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .message p{
+            color: var(--ink-dim);
+            margin-bottom: 20px;
+        }
+
+        .btn{
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--glass-strong);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover{
+            background: var(--accent);
+            color: #0a0906;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(199,154,91,0.3);
+        }
+
+        .btn-primary{
+            background: var(--accent);
+            color: #0a0906;
+        }
+
+        .btn-primary:hover{
+            background: #d4af37;
+        }
+
+        @keyframes pulse{
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .error-icon{
+            font-size: 80px;
+            color: var(--accent-dim);
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>FitConsult</h1>
+            <p>Painel Administrativo</p>
+        </div>
+
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+
+        <div class="message">
+            <h2>Página não encontrada</h2>
+            <p>A página que você está procurando não existe ou foi movida.</p>
+        </div>
+
+        <div>
+            <a href="admin.html" class="btn btn-primary">
+                <i class="fas fa-home"></i> Voltar para o Início
+            </a>
+            <a href="login.html" class="btn" style="margin-left: 15px;">
+                <i class="fas fa-sign-in-alt"></i> Fazer Login
+            </a>
+        </div>
+
+        <div style="margin-top: 30px; font-size: 0.9rem; color: var(--ink-dim);">
+            <p>Dica: Use o menu lateral para navegar entre as diferentes seções do sistema.</p>
+            <p>Se você chegou aqui por um link quebrado, por favor notifique o administrador.</p>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
+</body>
+</html>
